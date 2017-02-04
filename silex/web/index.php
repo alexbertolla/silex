@@ -15,6 +15,7 @@
 
 require_once '../vendor/autoload.php';
 
+
 $app = new \Silex\Application();
 $app['debug'] = TRUE;
 
@@ -31,6 +32,7 @@ $posts = array(
     array('id' => 9, 'post' => 'post9'),
     array('id' => 10, 'post' => 'post10'),
 );
+
 
 
 $app->get('/post/{id}', function ($id) use($posts) {
