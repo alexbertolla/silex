@@ -1,15 +1,10 @@
 <?php
 
 /*
- * Neste fase você deverá criar sua aplicação com Silex, com uma rota:
+ * Projeto Fase 3 - Services
 
-  /posts/{id}
-
-  Nesta rota o usuário irá acessar o post com respectivo id e aplicação irá
-  consultar em um conjunto de 10 post pré-definidos em um array (com id e conteudo),
-  retornando o id do post e seu conteúdo.
-
-  Se o id do post não for válido, o sistema deve retornar uma mensagem de erro
+Nesta fase você deverá criar um serviço compartilhado para prover nosso array de posts.
+E as rotas criadas usarão este serviço para pegar e mostrar os posts.
  */
 
 
