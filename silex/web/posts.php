@@ -29,7 +29,7 @@ $app['posts'] = function () {
 
 $app->get('/posts', function () use($app) {
     return $app['twig']->render('posts.twig', array('posts' => $app['posts']));
-})->bind('posts');;
+})->bind('posts');
 
 $app->get('/post/{post}', function ($post) use($app) {
     return $app['twig']->render('post.twig', array('post' => $post));

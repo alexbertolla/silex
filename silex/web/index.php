@@ -4,10 +4,15 @@
  * Projeto Fase 3 - Providers
   Nesta fase você deverá criar um layout para a aplicação, usando o estilo do Bootstrap 3.
 
+<<<<<<< HEAD
   Adicione o css via online (CDN), ou seja, sem baixar nenhum CSS para a aplicação.
 
   Crie também as páginas para as listagens dos posts e de um post e use o URLGeneratorProvider
   para redirecionamento.
+=======
+Nesta fase você deverá criar um serviço compartilhado para prover nosso array de posts.
+E as rotas criadas usarão este serviço para pegar e mostrar os posts.
+>>>>>>> origin/master
  */
 
 
