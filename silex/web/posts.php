@@ -28,11 +28,12 @@ $app['posts'] = function () {
 
 
 $app->get('/posts', function () use($app) {
-    foreach ($app['posts'] as $post) {
-        $retorno .= "<a href='/post/{$post['id']}'>{$post['id']} - {$post['post']}</a><br>";
-    }
-    return $retorno;
-});
+    return $app['twig']->render('posts.twig', array('posts' => $app['posts']));
+})->bind('posts');;
+
+$app->get('/post/{post}', function ($post) use($app) {
+    return $app['twig']->render('post.twig', array('post' => $post));
+})->bind('post');
 
 
 $app->get('/post/{id}', function ($id) use($app) {

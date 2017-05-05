@@ -1,0 +1,11 @@
+<table>
+    <thead><th>ID</th><th>POST</th>
+    <tbody>
+        {% for post in posts%}
+            <tr>
+                <td>{{post.id}}</td>
+                <td><a href="{{path('post',{'post':post.post})}}">{{post.post}}</a></td>
+            </tr>
+        {% endfor%}
+    </tbody>
+</table>
