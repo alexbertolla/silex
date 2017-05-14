@@ -73,5 +73,46 @@ $em = EntityManager::create(
 );
 
 
-//$em->flush($entity)
+$app = new Silex\Application();
+$app['debug'] = TRUE;
+
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__ . '/../view',
+));
+
+
+
+$app->register(new \Silex\Provider\RoutingServiceProvider());
+$app->register(new SessionServiceProvider());
+
+
+
+$app['user_repository'] = function($app) use ($em) {
+    $user = new SON\Entity\User();
+
+    $repo = $em->getRepository('SON\Entity\User');
+    $repo->setPasswordEncoder($app['security.encoder_factory']->getEncoder($user));
+
+    return $repo;
+};
+
+
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+    'security.firewalls' => array(
+        'admin' => array(
+            'anonymous' => true,
+            'pattern' => '^/',
+            'form' => array('login_path' => '/login', 'check_path' => '/admin/login_check'),
+            // lazily load the user_repository
+            'users' => function () use ($app) {
+                return $app['user_repository'];
+            },
+            'logout' => array('logout_path' => '/admin/logout'),
+        ),
+    )
+));
+
+$app['security.access_rules'] = array(
+    array('^/admin', 'ROLE_ADMIN'),
+);
 

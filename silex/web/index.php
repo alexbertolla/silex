@@ -1,20 +1,8 @@
 <?php
 
 /*
- * Nesta fase você deverá criar um CRUD completo para os posts 
-  (Inserir, editar, consultar e excluir).
-
-  Assim serão as rotas:
-
-  GET /posts - para listar todos os posts
-  GET /post/novo - para abrir o formulário de cadastro de post
-  POST /post/new - para cadastrar o post
-  GET /post/editar/{id} - para abrir o formulário de edição de post
-  POST /post/update/{id} - para atualizar o post
-  GET /post/excluir/{id} - para excluir o post
-
-  O post terá os seguintes campos
-  id (int e chave primária), titulo (string) e conteudo (string).
+  Você deverá criar o sistema de login com cadastro de usuário e o CRUD de post
+  só poderá ser acessado por um usuário autenticado.
  */
 
 
@@ -26,17 +14,40 @@ require_once './bootstrap.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use SON\Entity\Post;
+use SON\Entity\User;
 
-$app = new \Silex\Application();
-$app['debug'] = TRUE;
+$app->get('/criarUsuario', function (Request $request) use ($app) {
+    $username = $request->request->get('username');
+    $password = $request->request->get('password');
+    $admin = $request->request->get('admin');
+    $repo = $app['user_repository'];
+
+    if ($admin) {
+        $repo->createAdminUser($username, $password);
+    } else {
+        $repo->createUser($username, $password);
+    }
+
+    return $app->json(array('username' => $username, 'password' => $password, 'admin' => $admin));
+});
+
+$app->get('/login', function(Request $request) use ($app) {
+    return $app['twig']->render('login.twig', array(
+                'error' => $app['security.last_error']($request),
+                'last_username' => $app['session']->get('_security.last_username'),
+    ));
+})->bind('login');
 
 
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => __DIR__ . '/../view',
-));
+$app->get('/', function() use ($app) {
+    return $app->redirect($app['url_generator']->generate('posts'));
+})->bind('inicio');
 
-$app->register(new Silex\Provider\RoutingServiceProvider());
-
+$app->get('/posts', function() use ($app, $em) {
+    $posts = $em->getRepository(Post::class)->findAll();
+//    return $app->json($posts);
+    return $app['twig']->render('posts.twig', array('posts' => $posts));
+})->bind('posts');
 
 
 $app->get('/post/novo', function () use($app) {
@@ -85,11 +96,13 @@ $app->get('/post/excluir/{id}', function ($id) use($app, $em) {
     $post = $em->find(Post::class, $id);
     $em->remove($post);
     $em->flush();
-    
+
     $post = $em->find(Post::class, $id);
     return (!$post instanceof Post) ? $app->redirect($app['url_generator']->generate('sucesso')) :
             $app->redirect($app['url_generator']->generate('novo'));
 })->bind('excluir');
+
+
 
 
 $app->get('/post/sucesso', function() use ($app) {

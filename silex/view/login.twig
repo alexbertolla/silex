@@ -1,0 +1,10 @@
+{% if error %}
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
+{% endif %}
+<form action="{{ path('admin_login_check') }}" method="post">
+    <p>Usuário <input type="text" name="_username" value="{{ last_username }}"/></p>
+    <p>Senha <input type="text" name="_password"/></p>
+    <p><button type="submit">Logar</button></p>
+</form>
